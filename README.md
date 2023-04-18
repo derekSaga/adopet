@@ -10,6 +10,7 @@ O projeto é o produto do sexto desafio backend, promovido pela Alura
 - [Alembic](https://alembic.sqlalchemy.org/en/latest/)
 - [Pydantic](https://docs.pydantic.dev/)
 - [Aio-Pika](https://aio-pika.readthedocs.io/en/latest/)
+- [SQLAlchemy ](https://www.sqlalchemy.org/)
 - [RabbitMQ](https://www.rabbitmq.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Docker](https://www.docker.com/)

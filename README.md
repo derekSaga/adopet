@@ -15,13 +15,24 @@ O projeto é o produto do sexto desafio backend, promovido pela Alura
 - [PostgreSQL](https://www.postgresql.org/)
 - [Docker](https://www.docker.com/)
 
-## Installation
-
-### Requirements
+## Requisitos
 
 - [Docker](https://www.docker.com/)
 
-### Steps
+## Criar migrações
+
+### Windows
+
+* docker-compose run --rm -v ${pwd}:/app adopet-service alembic revision --autogenerate -m "[comentário sobre a revisão]"
+
+### Linux
+
+* docker-compose run --rm -v $pwd:/app adopet-service alembic revision --autogenerate -m "[comentário sobre a revisão]"
+
+## Atualizar banco
+* docker-compose run --rm -v ${pwd}:/app adopet-service alembic upgrade head
+
+## Rodar local
 
 1. Clone the repository
 2. Run `docker-compose up --build -d` in the root directory of the project

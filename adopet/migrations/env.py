@@ -14,6 +14,8 @@ sys.path.append(BASE_DIR)
 from adopet.api.models import animal_specie_model
 from adopet.api.models import city_model
 from adopet.api.models import state_model
+from adopet.api.models import size_model
+from adopet.api.models import status_model
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -42,6 +44,8 @@ target_metadata = [
     state_model.StateModel.metadata,
     city_model.CityModel.metadata,
     animal_specie_model.AnimalSpecieModel.metadata,
+    size_model.SizeModel.metadata,
+    status_model.StatusModel.metadata
 ]
 
 

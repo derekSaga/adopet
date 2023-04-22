@@ -19,8 +19,9 @@ class UserModel(BASE):
             schemes=["pbkdf2_sha512", "md5_crypt"],
             deprecated=["md5_crypt"],
             max_length=8,
-        )
+        ),
+        unique=True
     )
     role = Column(types.String, nullable=False)
     about = Column(types.String, nullable=False)
-    phot_url = Column(URLType, nullable=True)
+    photo_url = Column(URLType, nullable=True)

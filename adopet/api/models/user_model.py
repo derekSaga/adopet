@@ -1,7 +1,8 @@
 from api.models.base_model import StandardModelMixin
 from sqlalchemy import Column
 from sqlalchemy import types
-from sqlalchemy.orm import declarative_base, relationship
+from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import relationship
 from sqlalchemy_utils import EmailType
 from sqlalchemy_utils import PasswordType
 from sqlalchemy_utils import URLType
@@ -20,7 +21,7 @@ class UserModel(BASE):
             deprecated=["md5_crypt"],
             max_length=8,
         ),
-        unique=True
+        unique=True,
     )
     role = Column(types.String, nullable=False)
     about = Column(types.String, nullable=False)

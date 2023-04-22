@@ -17,6 +17,7 @@ from adopet.api.models import size_model
 from adopet.api.models import state_model
 from adopet.api.models import status_model
 from adopet.api.models import user_model
+from adopet.api.models import pet_model
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -48,6 +49,7 @@ target_metadata = [
     size_model.SizeModel.metadata,
     status_model.StatusModel.metadata,
     user_model.UserModel.metadata,
+    pet_model.PetModel.metadata
 ]
 
 

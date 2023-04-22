@@ -10,17 +10,29 @@ O projeto é o produto do sexto desafio backend, promovido pela Alura
 - [Alembic](https://alembic.sqlalchemy.org/en/latest/)
 - [Pydantic](https://docs.pydantic.dev/)
 - [Aio-Pika](https://aio-pika.readthedocs.io/en/latest/)
+- [SQLAlchemy ](https://www.sqlalchemy.org/)
 - [RabbitMQ](https://www.rabbitmq.com/)
 - [PostgreSQL](https://www.postgresql.org/)
 - [Docker](https://www.docker.com/)
 
-## Installation
-
-### Requirements
+## Requisitos
 
 - [Docker](https://www.docker.com/)
 
-### Steps
+## Criar migrações
+
+### Windows
+
+* docker-compose run --rm -v ${pwd}:/app adopet-service alembic revision --autogenerate -m "[comentário sobre a revisão]"
+
+### Linux
+
+* docker-compose run --rm -v $pwd:/app adopet-service alembic revision --autogenerate -m "[comentário sobre a revisão]"
+
+## Atualizar banco
+* docker-compose run --rm -v ${pwd}:/app adopet-service alembic upgrade head
+
+## Rodar local
 
 1. Clone the repository
 2. Run `docker-compose up --build -d` in the root directory of the project

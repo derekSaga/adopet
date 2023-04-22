@@ -13,8 +13,8 @@ sys.path.append(BASE_DIR)
 
 from adopet.api.models import animal_specie_model
 from adopet.api.models import city_model
-from adopet.api.models import state_model
 from adopet.api.models import size_model
+from adopet.api.models import state_model
 from adopet.api.models import status_model
 from adopet.api.models import user_model
 
@@ -47,7 +47,7 @@ target_metadata = [
     animal_specie_model.AnimalSpecieModel.metadata,
     size_model.SizeModel.metadata,
     status_model.StatusModel.metadata,
-    user_model.UserModel.metadata
+    user_model.UserModel.metadata,
 ]
 
 

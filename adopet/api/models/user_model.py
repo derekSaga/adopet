@@ -1,7 +1,7 @@
 from api.models.base_model import StandardModelMixin
 from sqlalchemy import Column
 from sqlalchemy import types
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, relationship
 from sqlalchemy_utils import EmailType
 from sqlalchemy_utils import PasswordType
 from sqlalchemy_utils import URLType
@@ -25,3 +25,9 @@ class UserModel(BASE):
     role = Column(types.String, nullable=False)
     about = Column(types.String, nullable=False)
     photo_url = Column(URLType, nullable=True)
+    pets = relationship(
+        "PetModel",
+        back_populates="owner",
+        cascade="all, delete",
+        passive_deletes=True,
+    )

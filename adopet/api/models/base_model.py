@@ -1,15 +1,17 @@
 import datetime
 from uuid import uuid4
 
+from core.config import settings
 from sqlalchemy import Column
 from sqlalchemy import types
-from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import declared_attr
 
-Base = declarative_base()
+Base = settings.BASE
 
 
 class StandardModelMixin(object):
+    __table_args__ = {"schema": settings.DATABASE_SCHEMA}
+
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()

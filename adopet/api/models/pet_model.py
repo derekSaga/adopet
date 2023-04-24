@@ -9,7 +9,6 @@ from sqlalchemy import Column
 from sqlalchemy import ForeignKey
 from sqlalchemy import types
 from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from sqlalchemy_utils import URLType
 
@@ -22,15 +21,11 @@ class PetModel(BASE):
     name = Column(types.String(155), nullable=False)
     personality = Column(types.String, nullable=False)
 
-    owner_id = mapped_column(types.UUID, ForeignKey(UserModel.id, ondelete="CASCADE"))
-    specie_id = mapped_column(
-        types.UUID, ForeignKey(AnimalSpecieModel.id, ondelete="CASCADE")
-    )
-    status_id = mapped_column(
-        types.UUID, ForeignKey(StatusModel.id, ondelete="CASCADE")
-    )
-    size_id = mapped_column(types.UUID, ForeignKey(SizeModel.id, ondelete="CASCADE"))
-    state_id = mapped_column(types.UUID, ForeignKey(StateModel.id, ondelete="CASCADE"))
-    city_id = mapped_column(types.UUID, ForeignKey(CityModel.id, ondelete="CASCADE"))
+    owner_id = Column(types.UUID, ForeignKey(UserModel.id, ondelete="CASCADE"))
+    specie_id = Column(types.UUID, ForeignKey(AnimalSpecieModel.id, ondelete="CASCADE"))
+    status_id = Column(types.UUID, ForeignKey(StatusModel.id, ondelete="CASCADE"))
+    size_id = Column(types.UUID, ForeignKey(SizeModel.id, ondelete="CASCADE"))
+    state_id = Column(types.UUID, ForeignKey(StateModel.id, ondelete="CASCADE"))
+    city_id = Column(types.UUID, ForeignKey(CityModel.id, ondelete="CASCADE"))
 
-    owner = relationship("UserModel", back_populates="pets")
+    owner = relationship("UserModel", back_populates="pets", foreign_keys=[owner_id])

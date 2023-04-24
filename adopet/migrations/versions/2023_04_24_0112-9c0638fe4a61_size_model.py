@@ -7,7 +7,6 @@ Create Date: 2023-04-24 01:12:44.248640
 """
 import sqlalchemy as sa
 from alembic import op
-
 from api.enums.size_enum import SizeEnum
 from api.models.size_model import SizeModel
 

@@ -7,7 +7,6 @@ Create Date: 2023-04-24 01:05:26.453106
 """
 import sqlalchemy as sa
 from alembic import op
-
 from api.enums.state_enum import StateEnum
 from api.models.state_model import StateModel
 

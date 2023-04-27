@@ -1,18 +1,16 @@
 """size model
 
-Revision ID: 9c0638fe4a61
-Revises: a6eb7cef308a
-Create Date: 2023-04-24 01:12:44.248640
+Revision ID: 85085d68e2e1
+Revises: 5c5afc62f994
+Create Date: 2023-04-26 20:07:35.322604
 
 """
 import sqlalchemy as sa
 from alembic import op
-from api.enums.size_enum import SizeEnum
-from api.models.size_model import SizeModel
 
 # revision identifiers, used by Alembic.
-revision = "9c0638fe4a61"
-down_revision = "a6eb7cef308a"
+revision = "85085d68e2e1"
+down_revision = "5c5afc62f994"
 branch_labels = None
 depends_on = None
 
@@ -31,18 +29,18 @@ def upgrade() -> None:
                 "LARGE",
                 "GIANT",
                 name="sizeenum",
+                schema="adopet",
                 create_constraint=True,
             ),
             nullable=False,
         ),
-        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
         schema="adopet",
     )
     # ### end Alembic commands ###
-    op.bulk_insert(SizeModel.__table__, [{"name": value.value} for value in SizeEnum])
 
 
 def downgrade() -> None:

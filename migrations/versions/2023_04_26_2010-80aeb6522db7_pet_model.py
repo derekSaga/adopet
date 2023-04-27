@@ -1,8 +1,8 @@
 """pet model
 
-Revision ID: 01fb7fa01d7c
-Revises: 6627418e92a3
-Create Date: 2023-04-24 01:19:27.226564
+Revision ID: 80aeb6522db7
+Revises: 371250f020b2
+Create Date: 2023-04-26 20:10:57.077281
 
 """
 import sqlalchemy as sa
@@ -10,8 +10,8 @@ import sqlalchemy_utils
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "01fb7fa01d7c"
-down_revision = "6627418e92a3"
+revision = "80aeb6522db7"
+down_revision = "371250f020b2"
 branch_labels = None
 depends_on = None
 
@@ -21,29 +21,30 @@ def upgrade() -> None:
     op.execute("CREATE SCHEMA IF NOT EXISTS adopet")
     op.create_table(
         "pet",
-        sa.Column("photo_url", sqlalchemy_utils.types.url.URLType(), nullable=True),
-        sa.Column("name", sa.String(length=155), nullable=False),
+        sa.Column("name", sa.String(), nullable=False),
+        sa.Column("photo_url", sqlalchemy_utils.types.url.URLType(), nullable=False),
         sa.Column("personality", sa.String(), nullable=False),
-        sa.Column("owner_id", sa.UUID(), nullable=True),
-        sa.Column("specie_id", sa.UUID(), nullable=True),
-        sa.Column("status_id", sa.UUID(), nullable=True),
-        sa.Column("size_id", sa.UUID(), nullable=True),
-        sa.Column("state_id", sa.UUID(), nullable=True),
-        sa.Column("city_id", sa.UUID(), nullable=True),
-        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("owner_id", sa.Uuid(), nullable=False),
+        sa.Column("specie_id", sa.Uuid(), nullable=False),
+        sa.Column("status_id", sa.Uuid(), nullable=False),
+        sa.Column("size_id", sa.Uuid(), nullable=False),
+        sa.Column("state_id", sa.Uuid(), nullable=False),
+        sa.Column("city_id", sa.Uuid(), nullable=False),
+        sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
         sa.ForeignKeyConstraint(["city_id"], ["adopet.city.id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["owner_id"], ["adopet.user.id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(["size_id"], ["adopet.size.id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(
-            ["specie_id"], ["adopet.animal_specie.id"], ondelete="CASCADE"
+            ["specie_id"], ["adopet.animalspecie.id"], ondelete="CASCADE"
         ),
         sa.ForeignKeyConstraint(["state_id"], ["adopet.state.id"], ondelete="CASCADE"),
         sa.ForeignKeyConstraint(
             ["status_id"], ["adopet.status.id"], ondelete="CASCADE"
         ),
         sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("photo_url"),
         schema="adopet",
     )
     # ### end Alembic commands ###

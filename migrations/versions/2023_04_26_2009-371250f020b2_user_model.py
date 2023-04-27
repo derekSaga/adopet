@@ -1,8 +1,8 @@
 """user model
 
-Revision ID: 6627418e92a3
-Revises: ddfe58fc87eb
-Create Date: 2023-04-24 01:16:16.725220
+Revision ID: 371250f020b2
+Revises: c97c583599cc
+Create Date: 2023-04-26 20:09:02.529014
 
 """
 import sqlalchemy as sa
@@ -10,8 +10,8 @@ import sqlalchemy_utils
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "6627418e92a3"
-down_revision = "ddfe58fc87eb"
+revision = "371250f020b2"
+down_revision = "c97c583599cc"
 branch_labels = None
 depends_on = None
 
@@ -26,15 +26,16 @@ def upgrade() -> None:
             "email", sqlalchemy_utils.types.email.EmailType(length=255), nullable=False
         ),
         sa.Column("phone_number", sa.String(), nullable=False),
-        sa.Column("password", sa.String(), nullable=True),
+        sa.Column("password", sa.String(), nullable=False),
         sa.Column("role", sa.String(), nullable=False),
         sa.Column("about", sa.String(), nullable=False),
-        sa.Column("photo_url", sqlalchemy_utils.types.url.URLType(), nullable=True),
-        sa.Column("id", sa.UUID(), nullable=False),
+        sa.Column("photo_url", sqlalchemy_utils.types.url.URLType(), nullable=False),
+        sa.Column("id", sa.Uuid(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("password"),
+        sa.UniqueConstraint("phone_number"),
+        sa.UniqueConstraint("photo_url"),
         schema="adopet",
     )
     op.create_index(

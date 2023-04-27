@@ -4,14 +4,25 @@ import sys
 
 from alembic import context
 from alembic import operations
-from sqlalchemy import inspect
+from api.models.animal_specie_model import AnimalSpecieModel
+from api.models.city_model import CityModel
+from api.models.pet_model import PetModel
+from api.models.size_model import SizeModel
+from api.models.state_model import StateModel
+from api.models.status_model import StatusModel
+from api.models.user_model import UserModel
+from core.config import settings
 from sqlalchemy import pool
-from sqlalchemy import schema
+from sqlalchemy import text
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#
+sys.path.append(BASE_DIR)
 
-def process_revision_directives(context, revision, directives):
+
+def process_revision_directives(context, revision, directives) -> None:
     """Modify the MigrationScript directives to create schemata as required."""
     script = directives[0]
     tables_list = [table for tg in target_metadata for table in tg.tables.values()]
@@ -24,19 +35,6 @@ def process_revision_directives(context, revision, directives):
         )
 
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-#
-sys.path.append(BASE_DIR)
-
-from adopet.api.models import animal_specie_model
-from adopet.api.models import city_model
-from adopet.api.models import pet_model
-from adopet.api.models import size_model
-from adopet.api.models import state_model
-from adopet.api.models import status_model
-from adopet.api.models import user_model
-from adopet.core.config import settings
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -45,12 +43,6 @@ config = context.config
 # This line sets up loggers basically.
 # if config.config_file_name is not None:
 #     fileConfig(config.config_file_name)
-
-# add your model's MetaData object here
-# for 'autogenerate' support
-# from myapp import my_model
-# target_metadata = my_model.Base.metadata
-
 url_connection = "postgresql+asyncpg://%s:%s@%s/%s" % (
     os.environ["POSTGRES_USER"],
     os.environ["POSTGRES_PASSWORD"],
@@ -59,15 +51,20 @@ url_connection = "postgresql+asyncpg://%s:%s@%s/%s" % (
 )
 
 config.set_main_option("sqlalchemy.url", url_connection)
+# add your model's MetaData object here
+# for 'autogenerate' support
+# from myapp import my_model
+# target_metadata = my_model.Base.metadata
+
 
 target_metadata = [
-    state_model.StateModel.metadata,
-    city_model.CityModel.metadata,
-    animal_specie_model.AnimalSpecieModel.metadata,
-    size_model.SizeModel.metadata,
-    status_model.StatusModel.metadata,
-    user_model.UserModel.metadata,
-    pet_model.PetModel.metadata,
+    StateModel.metadata,
+    SizeModel.metadata,
+    CityModel.metadata,
+    AnimalSpecieModel.metadata,
+    StatusModel.metadata,
+    UserModel.metadata,
+    PetModel.metadata,
 ]
 
 
@@ -111,8 +108,7 @@ def do_run_migrations(connection: Connection) -> None:
         version_table_schema=settings.DATABASE_SCHEMA,
         process_revision_directives=process_revision_directives,
     )
-    context.execute(f"create schema if not exists {settings.DATABASE_SCHEMA};")
-
+    context.execute(text(f"CReATE SCHEMA IF NOT EXISTS {settings.DATABASE_SCHEMA}"))
     with context.begin_transaction():
         context.run_migrations()
 

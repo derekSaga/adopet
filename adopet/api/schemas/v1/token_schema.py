@@ -1,3 +1,4 @@
+from typing import Union
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -10,8 +11,8 @@ class TokenSchema(BaseModel):
 
 
 class TokenPayload(BaseModel):
-    sub: str = None
-    exp: int = None
+    sub: Union[str, None] = None
+    exp: Union[int, None] = None
 
 
 class UserAuth(BaseModel):

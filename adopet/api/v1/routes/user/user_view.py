@@ -31,6 +31,7 @@ router = APIRouter()
     summary="Create new user",
 )
 async def post_user(user: UserSchemaCreate, db: AsyncSession = Depends(get_session)):
+    logger.info("creating user".title())
     new_user: UserModel = UserModel(**user.dict())
 
     new_user.password = get_hashed_password(new_user.password)

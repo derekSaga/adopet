@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Generator
+from typing import AsyncGenerator
 
 from api.models.user_model import UserModel
 from api.schemas.v1.token_schema import SystemUser
@@ -18,7 +18,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 reusable_oauth = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/user/login")
 
 
-async def get_session() -> Generator:
+async def get_session() -> AsyncGenerator:
     engine = create_async_engine(settings.DB_URL)
 
     session: AsyncSession = AsyncSession(engine)

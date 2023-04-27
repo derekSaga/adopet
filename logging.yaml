@@ -8,7 +8,7 @@ filters:
 
 formatters:
   timestamped:
-    class: core.log_formatter.CustomFormatter
+    format: "[%(asctime)s] - [%(correlation_id)s] - [%(name)s] - [%(filename)s:%(lineno)d] - [%(levelname)s]: %(message)s"
 
 handlers:
   console:

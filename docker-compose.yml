@@ -27,6 +27,20 @@ services:
       - "${API_PORT}:${API_PORT}"
     command: ["./start-for-local-development.sh"]
 
+  integration-tests:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    env_file: .env
+    working_dir: /app
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    command:
+      [
+        "./scripts/start-tests.sh",
+      ]
   db:
     image: postgres:11
     ports:

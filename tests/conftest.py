@@ -1,7 +1,8 @@
-import asyncio
+from unittest.mock import MagicMock
 
 import pytest
 from dotenv import load_dotenv
+from pytest_mock import MockFixture
 
 load_dotenv("test.env")
 
@@ -13,9 +14,9 @@ def fxt_settings() -> Settings:
     return Settings()
 
 
-@pytest.fixture(scope="class")
-def event_loop_instance(request):
-    """ Add the event_loop as an attribute to the unittest style test class. """
-    request.cls.event_loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield
-    request.cls.event_loop.close()
+@pytest.fixture
+def fxt_create_async_engine(fxt_settings: Settings, mocker: MockFixture) -> MagicMock:
+    new_mock = MagicMock()
+    mocked_build_publisher = mocker.patch("core.deps.create_async_engine", autospec=True)
+    mocked_build_publisher.return_value = new_mock
+    return mocked_build_publisher

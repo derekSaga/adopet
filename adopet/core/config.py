@@ -4,7 +4,7 @@ from pydantic import BaseSettings
 
 
 class Settings(BaseSettings):
-    API_V1_STR: str = "/api/v1"
+    API_V1_STR: str = os.environ["API_V1_STR"]
     API_PORT: int = int(os.environ["API_PORT"])
 
     DB_URL: str = "%s://%s:%s@%s:%s/%s" % (
@@ -17,13 +17,11 @@ class Settings(BaseSettings):
     )
     DATABASE_SCHEMA: str = os.environ["DATABASE_SCHEMA"]
 
-    ACCESS_TOKEN_EXPIRE_MINUTES = 1  # 30 minutes
-    REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 1 * 7  # 7 days
-    ALGORITHM = "HS256"
-    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY") or "my_super_secret"
-    JWT_REFRESH_SECRET_KEY = (
-        os.getenv("JWT_REFRESH_SECRET_KEY") or "my_refresh_super_secret"
-    )
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.environ["ACCESS_TOKEN_EXPIRE_MINUTES"])
+    REFRESH_TOKEN_EXPIRE_MINUTES: int = int(os.environ["REFRESH_TOKEN_EXPIRE_MINUTES"])
+    ALGORITHM: str = os.environ["ALGORITHM"]
+    JWT_SECRET_KEY: str = os.environ["JWT_SECRET_KEY"]
+    JWT_REFRESH_SECRET_KEY: str = os.environ["JWT_REFRESH_SECRET_KEY"]
 
     class Config:
         case_sensitive = True

@@ -6,10 +6,10 @@ from api.schemas.v1.token_schema import TokenSchema
 from api.schemas.v1.token_schema import UserOut
 from api.schemas.v1.user_schema import UserSchemaBase
 from api.schemas.v1.user_schema import UserSchemaCreate
-from api.v1.utils.auth import create_access_token
-from api.v1.utils.auth import create_refresh_token
-from api.v1.utils.auth import get_hashed_password
-from api.v1.utils.auth import verify_password
+from api.views.v1.utils.auth import create_access_token
+from api.views.v1.utils.auth import create_refresh_token
+from api.views.v1.utils.auth import get_hashed_password
+from api.views.v1.utils.auth import verify_password
 from core.deps import get_current_user
 from core.deps import get_session
 from fastapi import APIRouter
@@ -43,7 +43,7 @@ async def post_user(user: UserSchemaCreate, db: AsyncSession = Depends(get_sessi
             return new_user
 
     except Exception as error:
-        logger.info(error)
+        logger.error(error, exc_info=True)
         raise error
 
 

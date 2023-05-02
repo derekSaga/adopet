@@ -1,7 +1,7 @@
 import pathlib
 
 import yaml
-from api.v1.api import api_router
+from api.views.v1.api import api_router
 from asgi_correlation_id import CorrelationIdMiddleware
 from core.config import settings
 from fastapi import FastAPI

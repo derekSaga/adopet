@@ -1,10 +1,10 @@
 from datetime import datetime
-from typing import AsyncGenerator
 
 from api.models.user_model import UserModel
 from api.schemas.v1.token_schema import SystemUser
 from api.schemas.v1.token_schema import TokenPayload
 from core.config import settings
+from core.deps.get_session_db import get_session
 from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
@@ -13,23 +13,11 @@ from jose import jwt
 from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.ext.asyncio import create_async_engine
 
 reusable_oauth = OAuth2PasswordBearer(tokenUrl=f"{settings.API_V1_STR}/user/login")
 
 
-async def get_session() -> AsyncGenerator:
-    engine = create_async_engine(settings.DB_URL)
-
-    session: AsyncSession = AsyncSession(engine)
-
-    try:
-        yield session
-    finally:
-        await session.close()
-
-
-async def get_current_user(
+async def get_current_user_request(
     token: str = Depends(reusable_oauth), db: AsyncSession = Depends(get_session)
 ) -> SystemUser:
     try:

@@ -10,8 +10,8 @@ from api.views.v1.utils.auth import create_access_token
 from api.views.v1.utils.auth import create_refresh_token
 from api.views.v1.utils.auth import get_hashed_password
 from api.views.v1.utils.auth import verify_password
-from core.deps import get_current_user
-from core.deps import get_session
+from core.deps.get_current_user import get_current_user_request
+from core.deps.get_session_db import get_session
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
@@ -81,5 +81,5 @@ async def login(
 @router.get(
     "/me", summary="Get details of currently logged in user", response_model=UserOut
 )
-async def get_me(user: SystemUser = Depends(get_current_user)):
+async def get_me(user: SystemUser = Depends(get_current_user_request)):
     return user

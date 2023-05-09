@@ -12,7 +12,7 @@ class TokenSchema(BaseModel):
 
 class TokenPayload(BaseModel):
     sub: Union[str, None] = None
-    exp: Union[int, None] = None
+    exp: Union[float, int, None] = None
 
 
 class UserAuth(BaseModel):

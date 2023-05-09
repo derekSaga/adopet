@@ -1,5 +1,6 @@
 import logging
 
+from api.models.repositories.user_repository import UserRepository
 from api.models.user_model import UserModel
 from api.schemas.v1.token_schema import SystemUser
 from api.schemas.v1.token_schema import TokenSchema
@@ -17,7 +18,6 @@ from fastapi import Depends
 from fastapi import HTTPException
 from fastapi import status
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
@@ -32,19 +32,14 @@ router = APIRouter()
 )
 async def post_user(user: UserSchemaCreate, db: AsyncSession = Depends(get_session)):
     logger.info("creating user".title())
+
     new_user: UserModel = UserModel(**user.dict())
 
     new_user.password = get_hashed_password(new_user.password)
-    try:
-        async with db as session:
-            session.add(new_user)
-            await session.commit()
-            await session.refresh(new_user)
-            return new_user
 
-    except Exception as error:
-        logger.error(error, exc_info=True)
-        raise error
+    result = UserRepository(db).create_user(new_user)
+
+    return result
 
 
 @router.post(
@@ -56,9 +51,8 @@ async def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
     db: AsyncSession = Depends(get_session),
 ):
-    query = select(UserModel).where(UserModel.email == form_data.username)
-    result = await db.execute(query)
-    user = result.scalars().unique().one_or_none()
+    user = await UserRepository(db).get_user_by_email(email=form_data.username)
+
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

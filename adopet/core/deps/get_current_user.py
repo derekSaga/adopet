@@ -22,11 +22,11 @@ async def get_current_user_request(
 ) -> SystemUser:
     try:
         payload = jwt.decode(
-            token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token=token, key=settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
 
-        if datetime.fromtimestamp(token_data.exp) < datetime.now():
+        if datetime.fromtimestamp(token_data.exp).utcnow() < datetime.utcnow():
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Token expired",

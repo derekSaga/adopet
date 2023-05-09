@@ -20,7 +20,7 @@ def verify_password(password: str, hashed_pass: str) -> bool:
 
 def sum_expires_delta(minutes_expected: int, expires_delta: int = None) -> datetime:
     if expires_delta is not None:
-        expires_delta = datetime.utcnow() + timedelta(expires_delta)
+        expires_delta = datetime.utcnow() + timedelta(minutes=expires_delta)
     else:
         expires_delta = datetime.utcnow() + timedelta(minutes=minutes_expected)
     return expires_delta

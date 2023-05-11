@@ -1,5 +1,23 @@
+from typing import Any
+from typing import Dict
+
 from api.models.repositories.user_repository import UserRepository
+from faker import Faker
 from fastapi.testclient import TestClient
+
+myFactory = Faker(locale="pt_BR")
+
+
+def user_data_with_password() -> Dict[str, Any]:
+    return {
+        "name": myFactory.name(),
+        "email": myFactory.email(),
+        "phone_number": myFactory.msisdn(),
+        "password": user_password(),
+        "role": "myFactory.role()",
+        "about": myFactory.text(),
+        "photo_url": myFactory.image_url(),
+    }
 
 
 def user_password() -> str:

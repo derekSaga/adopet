@@ -101,3 +101,24 @@ class TestGetCurrentUser:
         assert mock_async.execute.call_args[0][0].__str__() == query.__str__()
         assert error.value.status_code == 404
         assert error.value.detail == "Could not find user"
+
+    @pytest.mark.asyncio
+    async def test_must_raise_when_invalid_token_is_passed(
+        self,
+        normal_user_token_headers: str,
+        fxt_async_session: AsyncSession,
+        test_user: UserModel,
+    ):
+        with mock.patch("core.deps.get_current_user.datetime") as mock_datetime:
+            mock_datetime.utcnow.return_value = datetime.datetime.utcnow() - timedelta(
+                hours=8
+            )
+
+            mock_datetime.fromtimestamp.return_value = (
+                datetime.datetime.utcnow() + timedelta(hours=8)
+            )
+        with pytest.raises(HTTPException) as error:
+            await get_current_user_request("invalid_token", fxt_async_session)
+
+        assert error.value.status_code == 403
+        assert error.value.detail == "Could not validate credentials"

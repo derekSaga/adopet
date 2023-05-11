@@ -44,3 +44,17 @@ class UserRepository(BaseRepository):
         result = await self.session.execute(query)
         value = result.scalar()
         return value
+
+    async def get_user_by_unique_constraint(
+        self, user_search: UserModel
+    ) -> Union[UserModel, None]:
+        query = select(UserModel)
+
+        filters = self.get_filter_by_constraints_from_table_model(
+            UserModel, user_search
+        )
+        query_execute = await self.session.execute(query.filter(*filters))
+
+        result = query_execute.scalars().unique().one_or_none()
+
+        return result

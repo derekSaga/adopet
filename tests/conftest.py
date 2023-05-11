@@ -10,4 +10,5 @@ pytest_plugins = [
     "tests.conftests.client_app_conftest",
     "tests.conftests.sqlalchemy_mocks_conftest",
     "tests.conftests.user_conftest",
+    "tests.conftests.token_schema_conftest",
 ]

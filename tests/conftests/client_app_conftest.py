@@ -29,21 +29,24 @@ def start_application():
 
 @pytest.fixture(autouse=True)
 async def fxt_async_engine(fxt_settings: Settings) -> AsyncEngine:
-    engine = create_async_engine(fxt_settings.DB_URL, echo=False)
-    async with engine.begin() as conn:
+    engine = create_async_engine(fxt_settings.DB_URL, echo=True)
+    async with engine.connect() as conn:
         await conn.execute(
             text("CREATE SCHEMA IF NOT EXISTS %s" % fxt_settings.DATABASE_SCHEMA)
         )
 
         UserModel.metadata.schema = fxt_settings.DATABASE_SCHEMA
-
         await conn.run_sync(UserModel.metadata.create_all)
+
+        await conn.commit()
 
         yield engine
 
-        # await conn.execute(
-        #     text("DROP SCHEMA %s CASCADE" % fxt_settings.DATABASE_SCHEMA)
-        # )
+        await conn.execute(
+            text("DROP SCHEMA %s CASCADE" % fxt_settings.DATABASE_SCHEMA)
+        )
+
+        await conn.commit()
 
 
 @pytest.fixture(autouse=True)

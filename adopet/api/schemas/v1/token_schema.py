@@ -2,12 +2,14 @@ from typing import Union
 from uuid import UUID
 
 from pydantic import BaseModel
+from pydantic import EmailStr
 from pydantic import Field
+from pydantic import StrictStr
 
 
 class TokenSchema(BaseModel):
-    access_token: str
-    refresh_token: str
+    access_token: StrictStr
+    refresh_token: StrictStr
 
 
 class TokenPayload(BaseModel):
@@ -16,13 +18,15 @@ class TokenPayload(BaseModel):
 
 
 class UserAuth(BaseModel):
-    email: str = Field(..., description="user email")
-    password: str = Field(..., min_length=5, max_length=24, description="user password")
+    email: EmailStr = Field(..., description="user email")
+    password: StrictStr = Field(
+        ..., min_length=5, max_length=24, description="user password"
+    )
 
 
 class UserOut(BaseModel):
     id: UUID
-    email: str
+    email: EmailStr
 
 
 class SystemUser(UserOut):

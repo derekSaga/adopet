@@ -21,16 +21,10 @@ O projeto é o produto do sexto desafio backend, promovido pela Alura
 
 ## Criar migrações
 
-### Windows
-
-* docker-compose run --rm -v ${pwd}:/app adopet-service alembic revision --autogenerate -m "[comentário sobre a revisão]"
-
-### Linux
-
-* docker-compose run --rm -v $pwd:/app adopet-service alembic revision --autogenerate -m "[comentário sobre a revisão]"
+* docker-compose run -e PYTHONPATH=adopet --rm adopet-revision alembic revision --autogenerate -m "[comentário sobre a revisão]"
 
 ## Atualizar banco
-* docker-compose run --rm -v ${pwd}:/app adopet-service alembic upgrade head
+* docker-compose run -e PYTHONPATH=adopet --rm adopet-revision alembic upgrade head
 
 ## Rodar local
 

@@ -1,26 +1,28 @@
-import datetime
+from datetime import datetime
+from uuid import UUID
 from uuid import uuid4
 
-from sqlalchemy import Column
-from sqlalchemy import types
-from sqlalchemy.orm import declarative_base
+from core.config import settings
+from sqlalchemy import func
+from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import declared_attr
+from sqlalchemy.orm import mapped_column
 
-Base = declarative_base()
+
+class Base(DeclarativeBase):
+    pass
 
 
 class StandardModelMixin(object):
-    @declared_attr
-    def __tablename__(cls):
-        return cls.__name__.lower()
+    __table_args__ = {"schema": settings.DATABASE_SCHEMA}
 
-    id = Column(types.UUID, name="id", primary_key=True, default=uuid4)
-    created_at = Column(
-        types.DateTime, default=datetime.datetime.utcnow, nullable=False
-    )
-    updated_at = Column(
-        types.DateTime,
-        default=datetime.datetime.utcnow,
-        onupdate=datetime.datetime.utcnow,
-        nullable=False,
+    @declared_attr.directive
+    def __tablename__(cls) -> str:
+        return cls.__name__.replace("Model", "").lower()
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    created_at: Mapped[datetime] = mapped_column(default=func.now(), nullable=False)
+    updated_at: Mapped[datetime] = mapped_column(
+        default=func.now(), onupdate=func.now(), nullable=False
     )

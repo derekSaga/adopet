@@ -13,7 +13,7 @@ RUN pip install --upgrade pip
 RUN pip install poetry
 
 # Copy dependency definition to cache
-COPY --chown=appuser alembic.ini poetry.lock pyproject.toml /app/
+COPY --chown=appuser logging.yaml alembic.ini poetry.lock pyproject.toml /app/
 
 # Installs projects dependencies as a separate layer
 RUN poetry export -o requirements.txt -f requirements.txt --no-cache
@@ -22,6 +22,8 @@ RUN pip install --require-hashes --no-cache-dir -r requirements.txt
 
 # Copies and chowns for the userapp on a single layer
 COPY --chown=appuser adopet/ .
+COPY --chown=appuser scripts/ .
+COPY --chown=appuser migrations/ migrations/
 
 # Switching to the non-root appuser for security
 USER appuser

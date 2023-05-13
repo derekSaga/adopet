@@ -6,6 +6,7 @@ from asgi_correlation_id import CorrelationIdMiddleware
 from core.config import settings
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
+from fastapi_pagination import add_pagination
 
 app = FastAPI(title="Adopet")
 app.include_router(api_router, prefix=settings.API_V1_STR)
@@ -14,6 +15,7 @@ app.add_middleware(
     CorrelationIdMiddleware,
     header_name="X-Request-ID",
 )
+add_pagination(app)
 
 
 @app.get("/", response_class=RedirectResponse, include_in_schema=False)

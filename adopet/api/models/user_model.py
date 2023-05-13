@@ -1,4 +1,7 @@
+from api.enums.user_role_enum import UserRoleEnum
 from api.models.base_model import StandardModelMixin
+from core.config import settings
+from sqlalchemy import Enum
 from sqlalchemy import types
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import declarative_base
@@ -16,6 +19,14 @@ class UserModel(BASE):
     )
     phone_number: Mapped[str] = mapped_column(types.String, nullable=False, unique=True)
     password: Mapped[str]
-    role: Mapped[str]
     about: Mapped[str]
     photo_url: Mapped[str] = mapped_column(URLType, nullable=False, unique=True)
+    role: Mapped[str] = mapped_column(
+        Enum(
+            UserRoleEnum,
+            values_callable=lambda obj: [e.value for e in obj],
+            create_constraint=True,
+            schema=settings.DATABASE_SCHEMA,
+        ),
+        nullable=False,
+    )

@@ -1,3 +1,5 @@
+from enum import Enum
+
 from api.exceptions.schema_validation_errors import PhoneNumberException
 from api.models.user_model import UserModel
 from phonenumbers import NumberParseException
@@ -27,6 +29,8 @@ class UserSchemaBase(BaseModel):
     role: str
     about: str
     photo_url: HttpUrl
+    # created_at: str
+    # updated_at: str
 
     @validator("photo_url")
     def check_photo_url(cls, value):
@@ -51,6 +55,13 @@ class UserSchemaBase(BaseModel):
 
     class Config:
         orm_mode = UserModel
+
+
+class UserTeste(UserSchemaBase):
+    role: Enum
+
+    class Config:
+        orm_mode = True
 
 
 class UserSchemaCreate(UserSchemaBase):

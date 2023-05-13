@@ -28,6 +28,9 @@ class UserOut(BaseModel):
     id: UUID
     email: EmailStr
 
+    class Config:
+        orm_mode = True
+
 
 class SystemUser(UserOut):
     password: str

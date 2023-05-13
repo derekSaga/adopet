@@ -3,8 +3,10 @@ from typing import Union
 
 from api.models.repositories.base_repository import BaseRepository
 from api.models.user_model import UserModel
+from fastapi_pagination.ext.sqlalchemy import paginate
 from pydantic import EmailStr
 from sqlalchemy import select
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 logger = logging.getLogger(__name__)
@@ -57,4 +59,12 @@ class UserRepository(BaseRepository):
 
         result = query_execute.scalars().unique().one_or_none()
 
+        return result
+
+    async def get_all_users(self, role: str):
+        query = select(UserModel).filter(text(f"{UserModel.role.name} = '{role}'"))
+        result = await paginate(
+            self.session,
+            query,
+        )
         return result

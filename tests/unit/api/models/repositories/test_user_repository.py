@@ -1,10 +1,14 @@
 from typing import Any
 from typing import Dict
+from typing import List
+from typing import Union
 
 import pytest
+from api.enums.user_role_enum import UserRoleEnum
 from api.models.repositories.user_repository import UserRepository
 from api.models.user_model import UserModel
 from faker import Faker
+from fastapi_pagination import Params
 from sqlalchemy.exc import IntegrityError
 
 from tests.support.utils import user_data_with_password
@@ -48,7 +52,7 @@ class TestUserRepository:
         assert result is None
 
     @pytest.mark.asyncio
-    async def test_c(
+    async def test_should_validate_when_user_is_deleted(
         self,
         fxt_user_repository: UserRepository,
         fxt_user_data_with_password: Dict[str, Any],
@@ -61,3 +65,22 @@ class TestUserRepository:
 
         result = await fxt_user_repository.get_user_by_unique_constraint(new_user)
         assert result is None
+
+    @pytest.mark.asyncio
+    async def test_must_validate_return_from_get_all_users_method(
+        self,
+        fxt_bulk_insert_users: List[Union[UserModel, List]],
+        fxt_user_repository: UserRepository,
+    ):
+        repository_result = []
+
+        for value in UserRoleEnum:
+            result = await fxt_user_repository.get_all_users(
+                value.value, params=Params(size=20)
+            )
+            repository_result.append(result)
+
+        repository_result = [item.id for pg in repository_result for item in pg.items]
+
+        for fxt_user in fxt_bulk_insert_users:
+            assert fxt_user.id in repository_result

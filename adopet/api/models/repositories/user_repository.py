@@ -61,10 +61,7 @@ class UserRepository(BaseRepository):
 
         return result
 
-    async def get_all_users(self, role: str):
+    async def get_all_users(self, role: str, **kwargs):
         query = select(UserModel).filter(text(f"{UserModel.role.name} = '{role}'"))
-        result = await paginate(
-            self.session,
-            query,
-        )
+        result = await paginate(self.session, query, **kwargs)
         return result

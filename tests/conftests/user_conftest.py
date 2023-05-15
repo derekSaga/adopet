@@ -1,5 +1,7 @@
 from typing import Any
 from typing import Dict
+from typing import List
+from typing import Union
 from unittest.mock import MagicMock
 
 import pytest
@@ -47,6 +49,23 @@ async def fxt_user_repository(fxt_async_session: AsyncSession) -> UserRepository
 
 
 @pytest.fixture(autouse=True)
+async def fxt_bulk_insert_users(
+    fxt_user_repository: UserRepository,
+) -> List[Union[UserModel, List]]:
+    users_result: List[Union[UserModel, List]] = []
+    for _ in range(10):
+        user = await fxt_user_repository.create_user(
+            UserModel(**user_data_with_password())
+        )
+        users_result += [user]
+
+    yield users_result
+
+    for user in users_result:
+        await fxt_user_repository.delete_user_by_email(user.email)
+
+
+@pytest.fixture(autouse=True)
 async def fxt_user_context(
     fxt_async_session: AsyncSession,
     fxt_user_data_with_password: Dict[str, Any],
@@ -67,15 +86,6 @@ def fxt_user_email(fxt_user_context: UserModel) -> str:
 async def test_user(
     fxt_async_session: AsyncSession, fxt_settings: Settings
 ) -> UserModel:
-    # new_user = UserModel(
-    #     name=myFactory.name(),
-    #     email=myFactory.email(),
-    #     phone_number=myFactory.phone_number(),
-    #     password=user_password(),
-    #     role="myFactory.role()",
-    #     about=myFactory.text(),
-    #     photo_url=myFactory.domain_name(),
-    # )
     new_user = UserModel(**user_data_with_password())
     new_user.metadata.schema = fxt_settings.DATABASE_SCHEMA
 

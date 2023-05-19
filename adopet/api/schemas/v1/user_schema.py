@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import Optional
+from typing import Union
 
 from api.exceptions.schema_validation_errors import PhoneNumberException
 from api.models.user_model import UserModel
@@ -26,11 +28,9 @@ class UserSchemaBase(BaseModel):
     name: str
     email: EmailStr
     phone_number: constr(max_length=50, strip_whitespace=True)
-    role: str
+    role: Union[Enum, str]
     about: str
     photo_url: HttpUrl
-    # created_at: str
-    # updated_at: str
 
     @validator("photo_url")
     def check_photo_url(cls, value):
@@ -57,7 +57,7 @@ class UserSchemaBase(BaseModel):
         orm_mode = UserModel
 
 
-class UserTeste(UserSchemaBase):
+class UserList(UserSchemaBase):
     role: Enum
 
     class Config:
@@ -65,4 +65,5 @@ class UserTeste(UserSchemaBase):
 
 
 class UserSchemaCreate(UserSchemaBase):
+    role: Optional[Union[Enum, str]]
     password: str

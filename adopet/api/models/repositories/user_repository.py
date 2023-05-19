@@ -25,6 +25,7 @@ class UserRepository(BaseRepository):
                 return new_user
 
         except Exception as error:
+            await self.session.rollback()
             logger.error(error, exc_info=True)
             raise error
 

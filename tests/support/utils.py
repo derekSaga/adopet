@@ -28,7 +28,7 @@ def user_password() -> str:
 
 def user_authentication_headers(client: TestClient, email: str, password: str) -> str:
     data = {"username": email, "password": password}
-    r = client.post("/user/login", data=data)
+    r = client.post("/api/v1/user/login", data=data)
     response = r.json()
     auth_token = response["access_token"]
     return auth_token

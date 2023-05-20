@@ -8,6 +8,7 @@ import pytest
 from api.models.repositories.user_repository import UserRepository
 from api.models.user_model import UserModel
 from api.schemas.v1.user_schema import MOBILE_NUMBER_TYPES
+from api.schemas.v1.user_schema import UserSchemaCreate
 from api.views.v1.utils.auth import get_hashed_password
 from core.config import Settings
 from faker import Faker
@@ -40,7 +41,8 @@ def fxt_number_type(fxt_settings: Settings, mocker: MockFixture) -> MagicMock:
 
 @pytest.fixture(autouse=True)
 def fxt_user_data_with_password() -> Dict[str, Any]:
-    return user_data_with_password()
+    user_data = UserSchemaCreate(**user_data_with_password())
+    return user_data.dict()
 
 
 @pytest.fixture(autouse=True)

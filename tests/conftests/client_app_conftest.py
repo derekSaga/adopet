@@ -6,8 +6,10 @@ from api.models.repositories.user_repository import UserRepository
 from api.models.user_model import UserModel
 from api.views.v1.api import api_router
 from core.config import Settings
+from core.config import settings
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
+from httpx import AsyncClient
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,13 +25,13 @@ def fxt_settings() -> Settings:
 
 def start_application():
     app = FastAPI()
-    app.include_router(api_router)
+    app.include_router(api_router, prefix=settings.API_V1_STR)
     return app
 
 
 @pytest.fixture(autouse=True)
 async def fxt_async_engine(fxt_settings: Settings) -> AsyncEngine:
-    engine = create_async_engine(fxt_settings.DB_URL, echo=True)
+    engine = create_async_engine(fxt_settings.DB_URL, echo=False)
     async with engine.connect() as conn:
         await conn.execute(
             text("CREATE SCHEMA IF NOT EXISTS %s" % fxt_settings.DATABASE_SCHEMA)
@@ -70,22 +72,17 @@ def app(fxt_async_session: AsyncSession) -> Generator[FastAPI, Any, None]:
 def client(
     app: FastAPI, fxt_async_session: AsyncSession
 ) -> Generator[TestClient, Any, None]:
-    def _get_test_db():
-        try:
-            yield fxt_async_session
-        finally:
-            pass
-
-    def get_db() -> Generator:
-        db = fxt_async_session
-        try:
-            yield db
-        finally:
-            db.close()
-
-    app.dependency_overrides[get_db] = _get_test_db
     with TestClient(app) as client:
         yield client
+
+
+@pytest.fixture()
+async def client_test(app: FastAPI) -> AsyncClient:
+    async with AsyncClient(
+        app=app, base_url="http://test", follow_redirects=True
+    ) as ac:
+        ac.headers["Content-Type"] = "application/json"
+        yield ac
 
 
 @pytest.fixture
